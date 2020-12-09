@@ -1,0 +1,13 @@
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: '/bin/bash'
+  args: ['-c', 'echo ${_DEMO_USER} > demotenant.txt']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['create', '--name', 'newdemo', 'gcr.io/cloud-solutions-images/run-viz-demo-service']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['cp', 'demotenant.txt', 'newdemo:/etc/demotenant.txt' ]
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['commit', 'newdemo', 'gcr.io/$PROJECT_ID/demo-service' ]
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/demo-service' ]
+images: ['gcr.io/$PROJECT_ID/demo-service']
